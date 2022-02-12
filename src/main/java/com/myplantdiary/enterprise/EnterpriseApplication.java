@@ -7,6 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class EnterpriseApplication {
 
     public static void main(String[] args) {
+        /**
+         * Starts de application in SpringBoot way
+         */
         SpringApplication.run(EnterpriseApplication.class, args);
     }
 
