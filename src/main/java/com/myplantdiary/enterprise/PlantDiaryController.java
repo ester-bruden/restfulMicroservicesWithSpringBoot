@@ -46,17 +46,15 @@ public class PlantDiaryController {
     }
 
     /**
-     * Fetch a specimen with the given ID.
+     * Create a new specimen object, given the data provided.
      *
-     * Given the parameter id, find a specimen that corresponds to this unique ID.
+     * returns one of the following status codes:
+     * 201: successfully created a new specimen.
+     * 409: unable to create a specimen, because it already exists.
      *
-     * Returns one of the following status codes:
-     * 200: specimen found
-     * 400: specimen not found
-     *
-     * @param id a unique identifier for this specimen
+     * @param sepcimen a JSON representation of a specimen object.
+     * @return the newly created specimen object.
      */
-
     @GetMapping("/specimen/{id}/")
     public ResponseEntity fetchSpecimenById(@PathVariable("id") String id) {
         /**
@@ -78,6 +76,7 @@ public class PlantDiaryController {
      * @param sepcimen a JSON representation of a specimen object.
      * @return the newly created specimen object.
      */
+
     @PostMapping(value="/specimen", consumes="application/json", produces="application/json")
     public Specimen createSpecimen(@RequestBody Specimen specimen) {
         /**
