@@ -1,11 +1,14 @@
 package com.myplantdiary.enterprise;
 
 import com.myplantdiary.enterprise.dto.Specimen;
+import com.myplantdiary.enterprise.service.ISpecimenService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 
 /**
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
  * <p>
  * This class also serves HTML based web pages, for UI interactions with plant specimens.
  * </p>
+ *
  * @author Ester Bruden
  */
 
@@ -30,8 +34,12 @@ public class PlantDiaryController {
 
     /**
      * Handle the root (/) endpoint and return a start page.
+     *
      * @return
      */
+    @Autowired
+    ISpecimenService specimenService;
+
     @RequestMapping("/")
     public String index() {
         return "start";
@@ -41,13 +49,15 @@ public class PlantDiaryController {
      * Operations we are going to do with specimen
      */
     @GetMapping("/specimen")
-    public ResponseEntity fetchAllSpecimens() {
-        return new ResponseEntity(HttpStatus.OK);
+    @ResponseBody
+    public List<Specimen> fetchAllSpecimens() {
+
+        return specimenService.fetchAll();
     }
 
     /**
      * Create a new specimen object, given the data provided.
-     *
+     * <p>
      * returns one of the following status codes:
      * 201: successfully created a new specimen.
      * 409: unable to create a specimen, because it already exists.
@@ -68,7 +78,7 @@ public class PlantDiaryController {
 
     /**
      * Create a new specimen object, given the data provided.
-     *
+     * <p>
      * returns one of the following status codes:
      * 201: successfully created a new specimen.
      * 409: unable to create a specimen, because it already exists.
@@ -77,13 +87,19 @@ public class PlantDiaryController {
      * @return the newly created specimen object.
      */
 
-    @PostMapping(value="/specimen", consumes="application/json", produces="application/json")
+    @PostMapping(value = "/specimen", consumes = "application/json", produces = "application/json")
     public Specimen createSpecimen(@RequestBody Specimen specimen) {
         /**
          * you receive the specimen as a Json representation
          * @RequestBody: can use some naming conventioins to parse through Json
          */
-        return specimen;
+        Specimen newSpecimen = null;
+        try {
+            newSpecimen = specimenService.save(specimen);
+        } catch (Exception e) {
+            // TODO add logging
+        }
+        return newSpecimen;
     }
 
     @DeleteMapping("/specimen/{id}/")
