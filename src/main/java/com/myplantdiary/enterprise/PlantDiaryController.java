@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,7 +44,15 @@ public class PlantDiaryController {
     ISpecimenService specimenService;
 
     @RequestMapping("/")
-    public String index() {
+    public String index(Model model) {
+        Specimen specimen = new Specimen();
+        // we add some hard coded data
+        specimen.setSpecimenId("1003");
+        specimen.setDescription("Pawpaw fruit season");
+        specimen.setPlantId(84);
+        specimen.setLatitude("39.74");
+        specimen.setLongitude("84.51");
+        model.addAttribute(specimen);
         return "start";
     }
 
