@@ -30,8 +30,16 @@ public class EnterpriseApplicationTests {
     @Test
     void fetchSpecimenByID_returnsRedbudForID83() throws Exception  {
         givenSpecimenDataAreAvailable();
+        whenSpecimen83AddedIsRedbud();
         whenSearchSpecimenWithID83();
         thenReturnOneEasternRedbudSpecimenForID83();
+    }
+
+    private void whenSpecimen83AddedIsRedbud() {
+        Specimen redbud = new Specimen();
+        redbud.setSpecimenId("83");
+        redbud.setDescription("Eastern Redbud");
+        Mockito.when(specimenDAO.fetch(83)).thenReturn(redbud);
     }
 
     private void givenSpecimenDataAreAvailable() throws Exception {
@@ -48,7 +56,6 @@ public class EnterpriseApplicationTests {
         assertEquals("Eastern Redbud", description);
     }
 
-    // MOKITO
 
     @Test
     void saveSpecimen_validateReturnSpecimenWithLatitudeAndLongitude() throws Exception  {

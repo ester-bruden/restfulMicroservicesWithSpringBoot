@@ -3,7 +3,9 @@ package com.myplantdiary.enterprise;
 import com.myplantdiary.enterprise.dto.Specimen;
 import com.myplantdiary.enterprise.service.ISpecimenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +14,7 @@ import java.util.List;
 
 
 /**
- * The controller fro Plant Diary REST endpoints and web UI
+ * The controller from Plant Diary REST endpoints and web UI
  * <p>
  * This class handles the CRUD operations for My Plant Diary specimens, via HTTP actions.
  * </p>
@@ -25,14 +27,14 @@ import java.util.List;
 
 @Controller
 public class PlantDiaryController {
-    /**
+    /*
      * Controller part of MVC
      * Controllers interpret user input and transform it into a model that is represented to the user by the view
      * The @Controller annotation acts as a stereotype for the annotated class, indicating its role.
      * The dispatcher scans such annotated classes for mapped methods and detects @RequestMapping annotations
      */
 
-    /**
+    /*
      * Handle the root (/) endpoint and return a start page.
      *
      * @return
@@ -55,43 +57,47 @@ public class PlantDiaryController {
         return specimenService.fetchAll();
     }
 
-    /**
+    /*
      * Create a new specimen object, given the data provided.
      * <p>
      * returns one of the following status codes:
      * 201: successfully created a new specimen.
      * 409: unable to create a specimen, because it already exists.
      *
-     * @param sepcimen a JSON representation of a specimen object.
+     * @param specimen a JSON representation of a specimen object.
      * @return the newly created specimen object.
      */
     @GetMapping("/specimen/{id}/")
     public ResponseEntity fetchSpecimenById(@PathVariable("id") String id) {
-        /**
+        /*
          * GetMapping-> get means read data
          * @PathVariable("id") will take the id from /specimen/{id}
          * and replace the value into the String id parameter
          * so that we can fetch the specific specimen
          */
-        return new ResponseEntity(HttpStatus.OK);
+        Specimen foundSpecimen = specimenService.fetchById(Integer.parseInt(id));
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        return new ResponseEntity(foundSpecimen, headers, HttpStatus.OK);
     }
 
-    /**
+    /*
      * Create a new specimen object, given the data provided.
      * <p>
      * returns one of the following status codes:
      * 201: successfully created a new specimen.
      * 409: unable to create a specimen, because it already exists.
      *
-     * @param sepcimen a JSON representation of a specimen object.
+     * @param specimen a JSON representation of a specimen object.
      * @return the newly created specimen object.
      */
 
     @PostMapping(value = "/specimen", consumes = "application/json", produces = "application/json")
     public Specimen createSpecimen(@RequestBody Specimen specimen) {
-        /**
+        /*
          * you receive the specimen as a Json representation
-         * @RequestBody: can use some naming conventioins to parse through Json
+         * @RequestBody: can use some naming conventions to parse through Json
          */
         Specimen newSpecimen = null;
         try {
@@ -104,8 +110,13 @@ public class PlantDiaryController {
 
     @DeleteMapping("/specimen/{id}/")
     public ResponseEntity deleteSpecimen(@PathVariable("id") String id) {
-        return new ResponseEntity(HttpStatus.OK);
+        try {
+            specimenService.delete(Integer.parseInt(id));
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-
-
 }
+

@@ -17,17 +17,23 @@ public class SpecimenServiceStub implements ISpecimenService{
 
     }
 
-    public SpecimenServiceStub(ISpecimenDAO specimenDAO) {
+    public SpecimenServiceStub(ISpecimenDAO specimenDAO)
+    {
         this.specimenDAO = specimenDAO;
     }
 
     @Override
     public Specimen fetchById(int id) {
-        // hardcoded representation of specimen
-        Specimen specimen = new Specimen();
-        specimen.setDescription("Eastern Redbud");
-        specimen.setSpecimenId("83");
-        return specimen;
+        Specimen foundSpecimen = specimenDAO.fetch(id);
+        return foundSpecimen;
+    }
+    public void saveSpecimen(Specimen newSpecimen){
+
+    }
+
+    @Override
+    public void delete(int id)throws Exception{
+        specimenDAO.delete(id);
     }
 
     @Override
