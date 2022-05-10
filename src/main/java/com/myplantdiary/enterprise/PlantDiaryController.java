@@ -56,6 +56,17 @@ public class PlantDiaryController {
         return "start";
     }
 
+    @RequestMapping("/saveSpecimen")
+    public String saveSpecimen(Specimen specimen) {
+        try {
+            specimenService.save(specimen);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "start";
+        }
+        return "start";
+    }
+
     /**
      * Operations we are going to do with specimen
      */
