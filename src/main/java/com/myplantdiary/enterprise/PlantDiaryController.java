@@ -77,6 +77,11 @@ public class PlantDiaryController {
         return specimenService.fetchAll();
     }
 
+    @GetMapping("/plants")
+    public ResponseEntity searchPlants(@RequestParam(value="searchTerm", required=false, defaultValue="None")  String searchTerm) {
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
     /*
      * Create a new specimen object, given the data provided.
      * <p>
