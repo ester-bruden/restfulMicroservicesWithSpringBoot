@@ -9,12 +9,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.testng.annotations.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
-import static org.testng.AssertJUnit.assertEquals;
 
 @SpringBootTest
-public class EnterpriseApplicationTests {
+class EnterpriseApplicationTests {
 
     private ISpecimenService specimenService;
     private Specimen specimen = new Specimen();
@@ -37,7 +37,7 @@ public class EnterpriseApplicationTests {
 
     private void whenSpecimen83AddedIsRedbud() {
         Specimen redbud = new Specimen();
-        redbud.setSpecimenId("83");
+        redbud.setSpecimenId(83);
         redbud.setDescription("Eastern Redbud");
         Mockito.when(specimenDAO.fetch(83)).thenReturn(redbud);
     }
@@ -56,7 +56,6 @@ public class EnterpriseApplicationTests {
         assertEquals("Eastern Redbud", description);
     }
 
-
     @Test
     void saveSpecimen_validateReturnSpecimenWithLatitudeAndLongitude() throws Exception  {
         givenSpecimenDataAreAvailable();
@@ -73,6 +72,11 @@ public class EnterpriseApplicationTests {
         Specimen createdSpecimen = specimenService.save(specimen);
         assertEquals(specimen, createdSpecimen);
         verify(specimenDAO, atLeastOnce()).save(specimen);
+    }
+
+    @Test
+    void thisTest_ShouldFail() {
+        assertEquals(4, 2+2);
     }
 
 }

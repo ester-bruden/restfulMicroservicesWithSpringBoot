@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 /**
  * The controller from Plant Diary REST endpoints and web UI
  * <p>
@@ -47,11 +46,11 @@ public class PlantDiaryController {
     public String index(Model model) {
         Specimen specimen = new Specimen();
         // we add some hard coded data
-        specimen.setSpecimenId("1003");
         specimen.setDescription("Pawpaw fruit season");
-        specimen.setPlantId(84);
         specimen.setLatitude("39.74");
-        specimen.setLongitude("84.51");
+        specimen.setLongitude("-84.51");
+        specimen.setSpecimenId(1003);
+        specimen.setPlantId(84);
         model.addAttribute(specimen);
         return "start";
     }
@@ -77,47 +76,26 @@ public class PlantDiaryController {
         return specimenService.fetchAll();
     }
 
-    @GetMapping("/plants")
-    public ResponseEntity searchPlants(@RequestParam(value="searchTerm", required=false, defaultValue="None")  String searchTerm) {
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-    /*
-     * Create a new specimen object, given the data provided.
-     * <p>
-     * returns one of the following status codes:
-     * 201: successfully created a new specimen.
-     * 409: unable to create a specimen, because it already exists.
-     *
-     * @param specimen a JSON representation of a specimen object.
-     * @return the newly created specimen object.
-     */
-
     /**
-     * Handle the sustainabilty endpoint and return a start page.
-     * @return
+     * Fetch a specimen with the given ID.
+     * <p>
+     * Given the parameter id, find a specimen that corresponds to this unique ID.
+     * <p>
+     * Returns one of the following status codes:
+     * 200: specimen found
+     * 400: specimen not found
+     *
+     * @param id a unique identifier for this specimen
      */
-    @RequestMapping("/sustainability")
-    public String sustainability() {
-        return "sustainability";
-    }
-
     @GetMapping("/specimen/{id}/")
-    public ResponseEntity fetchSpecimenById(@PathVariable("id") String id) {
-        /*
-         * GetMapping-> get means read data
-         * @PathVariable("id") will take the id from /specimen/{id}
-         * and replace the value into the String id parameter
-         * so that we can fetch the specific specimen
-         */
-        Specimen foundSpecimen = specimenService.fetchById(Integer.parseInt(id));
+    public ResponseEntity fetchSpecimenById(@PathVariable("id") int id) {
+        Specimen foundSpecimen = specimenService.fetchById(id);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-
         return new ResponseEntity(foundSpecimen, headers, HttpStatus.OK);
     }
 
-    /*
+    /**
      * Create a new specimen object, given the data provided.
      * <p>
      * returns one of the following status codes:
@@ -127,13 +105,9 @@ public class PlantDiaryController {
      * @param specimen a JSON representation of a specimen object.
      * @return the newly created specimen object.
      */
-
     @PostMapping(value = "/specimen", consumes = "application/json", produces = "application/json")
+    @ResponseBody
     public Specimen createSpecimen(@RequestBody Specimen specimen) {
-        /*
-         * you receive the specimen as a Json representation
-         * @RequestBody: can use some naming conventions to parse through Json
-         */
         Specimen newSpecimen = null;
         try {
             newSpecimen = specimenService.save(specimen);
@@ -144,14 +118,30 @@ public class PlantDiaryController {
     }
 
     @DeleteMapping("/specimen/{id}/")
-    public ResponseEntity deleteSpecimen(@PathVariable("id") String id) {
+    public ResponseEntity deleteSpecimen(@PathVariable("id") int id) {
         try {
-            specimenService.delete(Integer.parseInt(id));
+            specimenService.delete(id);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
     }
+
+    @GetMapping("/plants")
+    public ResponseEntity searchPlants(@RequestParam(value = "searchTerm", required = false, defaultValue = "None") String searchTerm) {
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    /**
+     * Handle the sustainabilty endpoint and return a start page.
+     *
+     * @return
+     */
+    @RequestMapping("/sustainability")
+    public String sustainability() {
+        return "sustainability";
+    }
+
 }
 
