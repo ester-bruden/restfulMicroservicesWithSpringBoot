@@ -92,6 +92,16 @@ public class PlantDiaryController {
      * @param specimen a JSON representation of a specimen object.
      * @return the newly created specimen object.
      */
+
+    /**
+     * Handle the sustainabilty endpoint and return a start page.
+     * @return
+     */
+    @RequestMapping("/sustainability")
+    public String sustainability() {
+        return "sustainability";
+    }
+
     @GetMapping("/specimen/{id}/")
     public ResponseEntity fetchSpecimenById(@PathVariable("id") String id) {
         /*
