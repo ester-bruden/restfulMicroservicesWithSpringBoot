@@ -1,17 +1,25 @@
 package com.myplantdiary.enterprise.service;
 
+import com.myplantdiary.enterprise.dao.IPlantDAO;
 import com.myplantdiary.enterprise.dao.ISpecimenDAO;
+import com.myplantdiary.enterprise.dto.Plant;
 import com.myplantdiary.enterprise.dto.Specimen;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
 public class SpecimenServiceStub implements ISpecimenService{
 
+    // we have a Service calling 2 different daos
     @Autowired
     private ISpecimenDAO specimenDAO;
+
+    @Autowired
+    // to the other end we are going to nedd to add repository annotation to PlantDAO
+    private IPlantDAO plantDAO;
 
     public SpecimenServiceStub() {
 
@@ -44,5 +52,10 @@ public class SpecimenServiceStub implements ISpecimenService{
     @Override
     public List<Specimen> fetchAll() {
         return specimenDAO.fetchAll();
+    }
+
+    @Override
+    public List<Plant> fetchPlants(String combinedName) throws IOException {
+        return plantDAO.fetchPlants(combinedName);
     }
 }
