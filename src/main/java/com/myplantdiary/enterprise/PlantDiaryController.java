@@ -130,7 +130,16 @@ public class PlantDiaryController {
 
     }
 
-    @GetMapping("/plants")
+    /** Returns Gson
+     * as we have two endpoint /plants we need to qualified them to make the controller aware on wjat to use
+     * instead of just @GetMapping("/plants")
+     * we will use :@GetMapping(value="/plants", consumes="application/json", produces="application/json")
+     * note that if we have more than one value pair, we have to specify value= "..."
+     * @param searchTerm
+     * @return ResponseEntity
+     */
+
+    @GetMapping(value="/plants", consumes="application/json", produces="application/json")
     public ResponseEntity searchPlants(@RequestParam(value="searchTerm", required=false, defaultValue="None")  String searchTerm) {
         try {
             List<Plant> plants = specimenService.fetchPlants(searchTerm);
@@ -144,6 +153,26 @@ public class PlantDiaryController {
 
     }
 
+    /** Returns Dto(object) to the html view
+     *
+     * @param searchTerm
+     * @param model
+     * @return String
+     */
+
+    @GetMapping("/plants")
+    public String searchPlantsForm(@RequestParam(value="searchTerm", required=false, defaultValue="None")  String searchTerm, Model model) {
+        try {
+            List<Plant> plants = specimenService.fetchPlants(searchTerm);
+            model.addAttribute("plants", plants);
+            // returns the name of an html file
+            return "plants";
+        } catch (IOException e) {
+            e.printStackTrace();
+            // returns the name of an html file
+            return "error";
+        }
+    }
 
     /**
      * Handle the sustainabilty endpoint and return a start page.
